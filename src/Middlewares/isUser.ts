@@ -32,6 +32,9 @@ export const IsUser = async (
       return res.status(400).json("invalid");
     }
 
+    //@ts-ignore
+    req.user = user;
+
     next();
   } catch (err) {
     console.log(err);

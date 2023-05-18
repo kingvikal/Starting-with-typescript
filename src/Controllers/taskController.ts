@@ -39,10 +39,9 @@ export const postTask = async (req: Request, res: Response) => {
     task.name = req.body.name;
     task.description = req.body.description;
     
+    
 
-   
-
-      return res.status(200).json({ message: "Task successfully added", task });
+    return res.status(200).json({ message: "Task successfully added", task });
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);

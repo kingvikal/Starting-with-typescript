@@ -4,10 +4,8 @@ import { validation } from "../Services/joiValidation";
 import { AppDataSource } from "../../models/datasource";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { Task } from "../../models/task.entity";
 
 const userRepository = AppDataSource.getRepository(User);
-const taskRepository = AppDataSource.getRepository(Task);
 
 export const Register = async (req: Request, res: Response) => {
   try {
@@ -33,6 +31,7 @@ export const Register = async (req: Request, res: Response) => {
       user.email = req.body.email;
       user.password = hashedPassword;
       user.username = req.body.username;
+      user.userType = req.body.userType;
 
       await userRepository.save(user);
 

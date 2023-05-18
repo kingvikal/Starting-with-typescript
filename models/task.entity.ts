@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   BaseEntity,
   OneToMany,
+  ManyToOne,
 } from "typeorm";
 import { User } from "./user.entity";
 
@@ -18,6 +19,6 @@ export class Task extends BaseEntity {
   @Column()
   description: string;
 
-  @OneToMany(() => User, (user) => user.task)
+  @ManyToOne(() => User, (user) => user.task)
   user: User;
 }
