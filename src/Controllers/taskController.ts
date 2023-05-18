@@ -6,14 +6,14 @@ const taskRepository = AppDataSource.getRepository(Task);
 
 export const getAllTask = async (req: Request, res: Response) => {
   try {
-    console.log("come here");
 
     const task = await taskRepository.find();
-    res.status(200).json(task);
+     res.status(200).json(task);
 
     if (task.length == 0 || !task.length) {
       return res.status(400).json("You don't have any task");
     }
+
   } catch (err) {
     console.log(err);
     res.status(500).json("Something went wrong");

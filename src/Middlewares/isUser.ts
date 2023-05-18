@@ -13,20 +13,20 @@ export const IsUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  const reqHeaders = req.headers.authorization;
-
-  const token = reqHeaders && reqHeaders.split(" ")[1];
-
-  if (!token) {
-    return res
-      .status(400)
-      .json({ message: "No token provided. Access Denied" });
-  }
-
   try {
+    const reqHeaders = req.headers.authorization;
+
+    const token = reqHeaders && reqHeaders.split(" ")[1];
+
+    if (!token) {
+      return res
+        .status(400)
+        .json({ message: "No token provided. Access Denied" });
+    }
+
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET);
 
-    const user = await userRepository.findOne(decoded.id);
+    const user: any = await userRepository.findBy(decoded.id);
 
     if (!user) {
       return res.status(400).json("invalid");

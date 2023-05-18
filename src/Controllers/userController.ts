@@ -35,7 +35,7 @@ export const Register = async (req: Request, res: Response) => {
       await userRepository.save(user);
 
       return res
-        .status(200)
+        .status(201)
         .json({ message: "User created Successfully", user });
     }
   } catch (err) {
@@ -89,7 +89,7 @@ export const Login = async (req: Request, res: Response) => {
 
 export const getAllUser = async (req: Request, res: Response) => {
   try {
-    const user = userRepository.find();
+    const user = await userRepository.find();
 
     if (user) {
       return res.status(200).json(user);
@@ -99,6 +99,22 @@ export const getAllUser = async (req: Request, res: Response) => {
   } catch (err) {
     console.log(err);
 
+    return res.status(500).json(err);
+  }
+};
+
+export const getUserById = async (req: Request, res: Response) => {
+  try {
+    const { id }: any = req.params;
+
+    const user = await userRepository.findOne({ where: { id } });
+    console.log(user);
+
+    if (user) {
+      return res.status(200).json(user);
+    }
+  } catch (err) {
+    console.log(err);
     return res.status(500).json(err);
   }
 };
