@@ -1,19 +1,19 @@
 import { Response, Request } from "express";
 import { AppDataSource } from "../../models/datasource";
 import { Task } from "../../models/task.entity";
+import { User } from "../../models/user.entity";
 
 const taskRepository = AppDataSource.getRepository(Task);
+const userRepository = AppDataSource.getRepository(User);
 
 export const getAllTask = async (req: Request, res: Response) => {
   try {
-
     const task = await taskRepository.find();
-     res.status(200).json(task);
+    res.status(200).json(task);
 
     if (task.length == 0 || !task.length) {
       return res.status(400).json("You don't have any task");
     }
-
   } catch (err) {
     console.log(err);
     res.status(500).json("Something went wrong");
@@ -38,9 +38,11 @@ export const postTask = async (req: Request, res: Response) => {
     const task: any = new Task();
     task.name = req.body.name;
     task.description = req.body.description;
+    
 
-    await taskRepository.save(task);
-    return res.status(200).json({ message: "Task successfully added", task });
+   
+
+      return res.status(200).json({ message: "Task successfully added", task });
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);

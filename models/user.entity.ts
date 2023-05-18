@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Task } from "./task.entity";
 
 @Entity()
 export class User {
@@ -19,4 +20,7 @@ export class User {
 
     @Column()
     password: string;
+
+    @ManyToOne(()=>Task, (task)=> task.user)
+    task: Task
 }

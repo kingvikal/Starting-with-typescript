@@ -4,8 +4,10 @@ import { validation } from "../Services/joiValidation";
 import { AppDataSource } from "../../models/datasource";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { Task } from "../../models/task.entity";
 
 const userRepository = AppDataSource.getRepository(User);
+const taskRepository = AppDataSource.getRepository(Task);
 
 export const Register = async (req: Request, res: Response) => {
   try {
@@ -118,3 +120,54 @@ export const getUserById = async (req: Request, res: Response) => {
     return res.status(500).json(err);
   }
 };
+
+export const updateUser = async (req: Request, res: Response) => {
+  try {
+    const { id }: any = req.params;
+    const { username, password, firstname, lastname } = req.body;
+
+    const hashedPassword = bcrypt.hashSync(password, 12);
+
+    const user = await userRepository.update(
+      { id },
+      {
+        firstname: firstname,
+        lastname: lastname,
+        username: username,
+        password: hashedPassword,
+      }
+    );
+    if (!firstname || !lastname || !username) {
+      return res.status(400).json({ error: `User must fill all fields` });
+    }
+
+    return res.status(200).json({
+      message: "user updated successfully",
+      success: `${user.affected} row affected`,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const { id }: any = req.params;
+
+    const user: any = await userRepository.delete({ id });
+
+    if (user.affected == 0) {
+      return res.status(400).json("User already deleted");
+    }
+    return res.status(200).json({
+      success: "Successfully deleted",
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
+  }
+};
+
+
+
