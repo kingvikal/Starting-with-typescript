@@ -3,7 +3,7 @@ import { Task } from "./task.entity";
 
 enum UserRole {
   TEACHER = "teacher",
-  STUDENT = "student"
+  STUDENT = "student",
 }
 @Entity()
 export class User {
@@ -26,7 +26,7 @@ export class User {
   password: string;
 
   @Column({ type: "enum", enum: UserRole, default: UserRole.STUDENT })
-  userType:UserRole;
+  userType: UserRole;
 
   @OneToMany(() => Task, (task) => task.user)
   task: Task[];

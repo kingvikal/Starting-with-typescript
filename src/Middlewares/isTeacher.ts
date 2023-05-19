@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 
-export const isTeacher = (req: Request, res: Response, next: NextFunction) => {
-  //@ts-ignore
-  console.log(req.user.userType);
+interface TeacherRequest extends Request {
+  user: any;
+}
 
-  //@ts-ignore
+
+export const isTeacher = (req: TeacherRequest, res: Response, next: NextFunction) => {
 
   if (!["teacher"].includes(req.user.userType)) {
     return res

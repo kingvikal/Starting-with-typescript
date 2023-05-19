@@ -33,15 +33,29 @@ export const getTask = async (req: Request, res: Response) => {
   }
 };
 
-export const postTask = async (req: Request, res: Response) => {
+interface UserRequest extends Request {
+  user: any;
+}
+export const postTask = async (req: UserRequest, res: Response) => {
   try {
+    const id = req.user.id;
+    const user = await userRepository.findOne({ where: { id } });
+
     const task: any = new Task();
     task.name = req.body.name;
     task.description = req.body.description;
-    
-    
+    task.user = user;
 
-    return res.status(200).json({ message: "Task successfully added", task });
+    await taskRepository
+      .save(task)
+      .then(() => {
+        return res
+          .status(200)
+          .json({ message: "Task successfully added", task });
+      })
+      .catch((err) => {
+        return res.status(400).json({ errmessage: err });
+      });
   } catch (err) {
     console.log(err);
     return res.status(500).json(err);

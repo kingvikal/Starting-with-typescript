@@ -8,8 +8,11 @@ dotenv.config();
 
 const userRepository = AppDataSource.getRepository(User);
 
+interface RequestUser extends Request {
+  user: any;
+}
 export const IsUser = async (
-  req: Request,
+  req: RequestUser,
   res: Response,
   next: NextFunction
 ) => {
@@ -26,13 +29,15 @@ export const IsUser = async (
 
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET);
 
-    const user: any = await userRepository.findBy(decoded.id);
+    const user: any = await userRepository.findOne({
+      where: { id: decoded.id },
+    });
+
 
     if (!user) {
       return res.status(400).json("invalid");
     }
 
-    //@ts-ignore
     req.user = user;
 
     next();
