@@ -11,7 +11,7 @@ import { isTeacher } from "../Middlewares/isTeacher";
 
 const router = Router();
 
-router.get("/getAllTask", IsUser, getAllTask);
+router.get("/getAllTask", IsUser,isTeacher, getAllTask);
 router.get("/getTask/:id", getTask);
 router.put("/updateTask/:id", isTeacher, updateTask);
 router.delete("/deleteTask/:id", isTeacher, deleteTask);

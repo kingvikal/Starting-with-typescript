@@ -6,27 +6,37 @@ import { User } from "../../models/user.entity";
 const taskRepository = AppDataSource.getRepository(Task);
 const userRepository = AppDataSource.getRepository(User);
 
-export const getAllTask = async (req: Request, res: Response) => {
+interface UserRequest extends Request {
+  user: any;
+}
+export const getAllTask = async (req: UserRequest, res: Response) => {
   try {
-    const task = await taskRepository.find();
-    res.status(200).json(task);
-
-    if (task.length == 0 || !task.length) {
-      return res.status(400).json("You don't have any task");
+    const task = AppDataSource.getRepository(User);
+    let data = await task.find({
+      relations: ["task"],
+    });
+    if (req.user.userType == "teacher") {
+      return res.status(200).json(data);
+    } else {
+      if (req.user.userType == "student") {
+        return res.status(400).json("You don't have right to view task");
+      }
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json("Something went wrong");
+    res.status(500).json(err);
   }
 };
 
 export const getTask = async (req: Request, res: Response) => {
   try {
-    const task = await taskRepository.findOneBy({
-      id: Number(req.params.id),
+    let repo = AppDataSource.getRepository(User);
+    let data = await repo.find({
+      relations: ["task"],
     });
-    if (task) {
-      return res.status(200).json(task);
+
+    if (data) {
+      return res.status(200).json(data);
     }
   } catch (err) {
     return res.status(500).json(err);
